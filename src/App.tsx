@@ -2,10 +2,13 @@ import { useEffect } from 'react'
 import './App.css'
 import Header from './components/Header'
 import WordGrid from './components/WordGrid'
+import Footer from './components/Footer'
 import theme from './theme'
 import {
   Button,
-  ChakraProvider
+  ChakraProvider,
+  Flex,
+  Box
 } from "@chakra-ui/react"
 import { useGameStore } from './store/gameStore'
 
@@ -20,20 +23,25 @@ function App() {
 
   return (
     <ChakraProvider value={theme}>
-      <Header />
-      <WordGrid />
-      {isGameOver && (
-        <Button
-          rounded='full'
-          variant='outline'
-          w='60%'
-          p={5}
-          m={8}
-          onClick={resetGame}
-        >
-          Play again
-        </Button>
-      )}
+      <Flex direction="column" minHeight="100vh">
+        <Header />
+        <Box flex="1">
+          <WordGrid />
+          {isGameOver && (
+            <Button
+              rounded='full'
+              variant='outline'
+              w='60%'
+              p={5}
+              m={8}
+              onClick={resetGame}
+            >
+              Play again
+            </Button>
+          )}
+        </Box>
+        <Footer />
+      </Flex>
     </ChakraProvider>
   )
 }
