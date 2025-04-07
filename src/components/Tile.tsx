@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react'
 
 interface TileProps {
-    children: string | null;
+    children?: string | null;
     color?: string;
 }
 
@@ -13,7 +13,7 @@ const Tile = ({ children, color }: TileProps) => {
         <Box
             h='3.5rem'
             w='3.5rem'
-            borderWidth={letter ? 0 : '2px'}
+            borderWidth={color ? 0 : '2px'}
             borderColor='gray'
             backgroundColor={color}
         >

@@ -1,11 +1,15 @@
+import { useEffect, useState } from 'react';
 import Tile from './Tile'
 
 interface TileRowProps {
-    guess: string[] | null[];
+    word: string[] | null[];
     rowId: number;
+    active: boolean;
 }
 
-const TileRow = ({ guess, rowId }: TileRowProps) => {
+const TileRow = ({ word, rowId, active }: TileRowProps) => {
+    const [guess, setGuess] = useState<string[]>([])
+
     let answer = 'Happy'
     let answerChars = answer.toUpperCase().split('');
     let charCounts = new Map()
@@ -40,11 +44,48 @@ const TileRow = ({ guess, rowId }: TileRowProps) => {
         return 'gray';
     }
 
+    if (active) {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Backspace') {
+                setGuess(prev => prev.slice(0, -1))
+            }
+            else if (/^[A-Za-z]$/.test(e.key)) {
+                setGuess(prev => {
+                    // Only add the letter if we have less than 5 letters
+                    if (prev.length < 5) {
+                        return [...prev, e.key.toUpperCase()]
+                    }
+                    return prev
+                })
+            }
+        }
+
+        useEffect(() => {
+            document.addEventListener("keydown", handleKeyDown);
+
+            return () => {
+                document.removeEventListener("keydown", handleKeyDown);
+            }
+        }, [active]);
+
+        let guessLetters: (string | null)[] = [...guess]
+        console.log("guessLetters:", guessLetters)
+        while (guessLetters.length < 5) {
+            guessLetters.push(null)
+        }
+
+        return (
+            guessLetters.map((letter, colId) => {
+                return <Tile key={`${rowId}${colId}`}>{letter}</Tile>
+            })
+        )
+    }
+
     return (
-        guess.map((letter, colId) => {
+        word.map((letter, colId) => {
             return <Tile
                 key={`${rowId}${colId}`}
-                color={getTileColor(guess[colId], colId)}
+                color={getTileColor(word[colId], colId)}
             >
                 {letter}
             </Tile>
