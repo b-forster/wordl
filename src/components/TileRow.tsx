@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Tile from './Tile'
 import { Letter } from '../types';
 
@@ -6,9 +6,10 @@ interface TileRowProps {
     word: Letter[];
     rowId: number;
     active: boolean;
+    onSubmit: (guess: Letter[]) => void;
 }
 
-const TileRow = ({ word, rowId, active }: TileRowProps) => {
+const TileRow = ({ word, rowId, active, onSubmit }: TileRowProps) => {
     const [guess, setGuess] = useState<Letter[]>([])
 
     let answer = 'Happy'
@@ -45,31 +46,57 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
         return 'gray';
     }
 
-    if (active) {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Backspace') {
-                setGuess(prev => prev.slice(0, -1))
-            }
-            else if (/^[A-Za-z]$/.test(e.key)) {
-                setGuess(prev => {
-                    // Only add the letter if we have less than 5 letters
-                    if (prev.length < 5) {
-                        return [...prev, e.key.toUpperCase()]
-                    }
-                    return prev
-                })
-            }
-        }
+    // Track if Enter key was pressed
+    const [enterPressed, setEnterPressed] = useState(false);
 
-        useEffect(() => {
+    // Use useCallback to memoize the handleKeyDown function
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        // Only process keyboard events if the row is active
+        if (!active) return;
+
+        if (e.key === 'Backspace') {
+            setGuess(prev => prev.slice(0, -1))
+        }
+        else if (/^[A-Za-z]$/.test(e.key)) {
+            setGuess(prev => {
+                // Only add the letter if we have less than 5 letters
+                if (prev.length < 5) {
+                    return [...prev, e.key.toUpperCase()]
+                }
+                return prev
+            })
+        }
+        else if (e.key === 'Enter') {
+            setEnterPressed(true);
+        }
+    }, [active, setGuess, setEnterPressed]);
+
+    // Handle keyboard events
+    useEffect(() => {
+        if (active) {
             document.addEventListener("keydown", handleKeyDown);
 
             return () => {
                 document.removeEventListener("keydown", handleKeyDown);
             }
-        }, [active]);
+        }
+    }, [active, handleKeyDown]);
 
-        let guessLetters: Letter[] = [...guess]
+    // Effect to handle onSubmit when Enter is pressed
+    useEffect(() => {
+        if (enterPressed && active) {
+            console.log("Submitting guess:", guess);
+            onSubmit(guess);
+            setEnterPressed(false);
+        }
+    }, [enterPressed, guess, onSubmit, active]);
+
+    // Render either current in progress guess if row is active,
+    // or previously submitted guess if not active
+    let guessLetters: Letter[] = active ? [...guess] : [...word];
+
+    // If active row, fill remaining slots with null
+    if (active) {
         while (guessLetters.length < 5) {
             guessLetters.push(null)
         }

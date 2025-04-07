@@ -14,11 +14,29 @@ const WordGrid = () => {
         [null, null, null, null, null],
     ])
 
-    // const [guess, setGuess] = useState(['H', null, null, null, null])
     const [activeRow, setActiveRow] = useState(0);
 
     const isActiveRow = (rowIndex: number) => {
         return rowIndex === activeRow
+    }
+
+    const submitGuess = (guess: Letter[]) => {
+        if (guess.length < 5) {
+            console.log('Not enough letters');
+            return;
+        }
+
+        // Create a new grid with the current guess in the active row
+        const newGrid = [...grid];
+        newGrid[activeRow] = [...guess];
+        setGrid(newGrid);
+
+        // Move to the next row
+        if (activeRow < grid.length - 1) {
+            setActiveRow(activeRow + 1);
+        } else {
+            console.log('Game over - no more rows');
+        }
     }
 
     return (
@@ -27,7 +45,7 @@ const WordGrid = () => {
             gap='1'
         >
             {grid.map((row, rowId) => {
-                return <TileRow key={rowId} word={row} rowId={rowId} active={isActiveRow(rowId)} />
+                return <TileRow key={rowId} word={row} rowId={rowId} active={isActiveRow(rowId)} onSubmit={submitGuess} />
             })}
 
         </SimpleGrid>
