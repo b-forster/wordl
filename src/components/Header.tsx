@@ -1,12 +1,11 @@
-import { Text } from '@chakra-ui/react'
-import React from 'react'
+import { Text, VStack } from '@chakra-ui/react'
 
 const Header = () => {
     return (
-        <>
-            <Text fontSize='5xl' fontWeight='semibold'>Wordl</Text>
-            <Text fontSize='md' mb='5'>A New York Times <a href='https://www.nytimes.com/games/wordle' target='_blank noopener noreferrer'>Wordle</a> clone</Text>
-        </>
+        <VStack gap={0}>
+            <Text textStyle='decorative' fontSize='6xl' fontWeight='bold' lineHeight='1'>Wordl</Text>
+            <Text textStyle='decorative' fontSize='md' mb='5'>A New York Times <a href='https://www.nytimes.com/games/wordle' target='_blank noopener noreferrer'>Wordle</a> clone</Text>
+        </VStack>
     )
 }
 
