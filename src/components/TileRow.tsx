@@ -14,10 +14,10 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
     const [guess, setGuess] = useState<Letter[]>([])
 
     // Use the solution from the store
-    let answerChars = solution.split('');
-    let charCounts = new Map()
+    const answerChars = solution.split('');
+    const charCounts = new Map()
 
-    for (let char of answerChars) {
+    for (const char of answerChars) {
         charCounts.set(char, (charCounts.get(char) || 0) + 1)
     }
 
@@ -101,7 +101,7 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
 
     // Render either current in progress guess if row is active,
     // or previously submitted guess if not active
-    let guessLetters: Letter[] = active ? [...guess] : [...word];
+    const guessLetters: Letter[] = active ? [...guess] : [...word];
 
     // If active row, fill remaining slots with null
     if (active) {
