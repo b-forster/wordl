@@ -1,15 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import Tile from './Tile'
 import { Letter } from '../types';
+import { useGameStore } from '../store/gameStore';
 
 interface TileRowProps {
     word: Letter[];
     rowId: number;
     active: boolean;
-    onSubmit: (guess: Letter[]) => void;
 }
 
-const TileRow = ({ word, rowId, active, onSubmit }: TileRowProps) => {
+const TileRow = ({ word, rowId, active }: TileRowProps) => {
+    const { submitGuess } = useGameStore();
     const [guess, setGuess] = useState<Letter[]>([])
 
     let answer = 'Happy'
@@ -82,13 +83,20 @@ const TileRow = ({ word, rowId, active, onSubmit }: TileRowProps) => {
         }
     }, [active, handleKeyDown]);
 
-    // Effect to handle onSubmit when Enter is pressed
+    // Submit guess when Enter is pressed
     useEffect(() => {
         if (enterPressed && active) {
-            onSubmit(guess);
+            submitGuess(guess);
             setEnterPressed(false);
         }
-    }, [enterPressed, guess, onSubmit, active]);
+    }, [enterPressed, guess, submitGuess, active]);
+
+    // Reset guess when the row becomes active (e.g., after game reset)
+    useEffect(() => {
+        if (active) {
+            setGuess([]);
+        }
+    }, [active]);
 
     // Render either current in progress guess if row is active,
     // or previously submitted guess if not active

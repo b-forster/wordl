@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import Header from './components/Header'
 import WordGrid from './components/WordGrid'
@@ -7,16 +6,28 @@ import {
   Button,
   ChakraProvider
 } from "@chakra-ui/react"
+import { useGameStore } from './store/gameStore'
 
 
 function App() {
-  const [gameOver, setGameOver] = useState<boolean>(false)
+  const { isGameOver, resetGame } = useGameStore()
 
   return (
     <ChakraProvider value={theme}>
       <Header />
-      <WordGrid onGameOver={() => setGameOver(true)} />
-      {gameOver && <Button rounded='full' variant='outline' w='60%' p={5} m={8}>Play again</Button>}
+      <WordGrid />
+      {isGameOver && (
+        <Button
+          rounded='full'
+          variant='outline'
+          w='60%'
+          p={5}
+          m={8}
+          onClick={resetGame}
+        >
+          Play again
+        </Button>
+      )}
     </ChakraProvider>
   )
 }
