@@ -10,11 +10,11 @@ interface TileRowProps {
 }
 
 const TileRow = ({ word, rowId, active }: TileRowProps) => {
-    const { submitGuess } = useGameStore();
+    const { submitGuess, solution } = useGameStore();
     const [guess, setGuess] = useState<Letter[]>([])
 
-    let answer = 'Happy'
-    let answerChars = answer.toUpperCase().split('');
+    // Use the solution from the store
+    let answerChars = solution.split('');
     let charCounts = new Map()
 
     for (let char of answerChars) {

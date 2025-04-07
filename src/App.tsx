@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import './App.css'
 import Header from './components/Header'
 import WordGrid from './components/WordGrid'
@@ -10,7 +11,12 @@ import { useGameStore } from './store/gameStore'
 
 
 function App() {
-  const { isGameOver, resetGame } = useGameStore()
+  const { isGameOver, resetGame, loadSolutionWords } = useGameStore()
+
+  // Load all possible solution words when the app starts
+  useEffect(() => {
+    loadSolutionWords()
+  }, [loadSolutionWords])
 
   return (
     <ChakraProvider value={theme}>
