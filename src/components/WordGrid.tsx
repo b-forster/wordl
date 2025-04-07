@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { SimpleGrid } from '@chakra-ui/react'
 import TileRow from './TileRow'
+import { Letter } from '../types'
 
 
 const WordGrid = () => {
-    const [grid, setGrid] = useState([
+    const [grid, setGrid] = useState<Letter[][]>([
         [null, null, null, null, null],
         [null, null, null, null, null],
-        [null, null, null, null, null,],
-        [null, null, null, null, null,],
-        [null, null, null, null, null,],
-        [null, null, null, null, null,],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
     ])
 
     // const [guess, setGuess] = useState(['H', null, null, null, null])

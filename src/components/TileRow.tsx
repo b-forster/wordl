@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import Tile from './Tile'
+import { Letter } from '../types';
 
 interface TileRowProps {
-    word: string[] | null[];
+    word: Letter[];
     rowId: number;
     active: boolean;
 }
 
 const TileRow = ({ word, rowId, active }: TileRowProps) => {
-    const [guess, setGuess] = useState<string[]>([])
+    const [guess, setGuess] = useState<Letter[]>([])
 
     let answer = 'Happy'
     let answerChars = answer.toUpperCase().split('');
@@ -31,7 +32,7 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
     }
 
     // TODO: Rename function if we keep decrement side effect here
-    const getTileColor = (letter: string | null, index: number) => {
+    const getTileColor = (letter: Letter, index: number) => {
         if (!letter) return;
         if (existsAtPosition(letter, index)) {
             decrementCharCount(letter)
@@ -68,8 +69,7 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
             }
         }, [active]);
 
-        let guessLetters: (string | null)[] = [...guess]
-        console.log("guessLetters:", guessLetters)
+        let guessLetters: Letter[] = [...guess]
         while (guessLetters.length < 5) {
             guessLetters.push(null)
         }

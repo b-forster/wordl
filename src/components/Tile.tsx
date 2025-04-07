@@ -1,7 +1,8 @@
 import { Box, Text } from '@chakra-ui/react'
+import { Letter } from '../types';
 
 interface TileProps {
-    children?: string | null;
+    children?: Letter;
     color?: string;
 }
 
