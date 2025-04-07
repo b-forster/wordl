@@ -3,6 +3,7 @@ import './App.css'
 import Header from './components/Header'
 import WordGrid from './components/WordGrid'
 import Footer from './components/Footer'
+import KeyBoard from './components/Keyboard'
 import theme from './theme'
 import {
   Button,
@@ -39,6 +40,7 @@ function App() {
               Play again
             </Button>
           )}
+          {!isGameOver && <KeyBoard />}
         </Box>
         <Footer />
       </Flex>

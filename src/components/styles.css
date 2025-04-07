@@ -1,0 +1,12 @@
+.hg-theme-default {
+    font-weight: 800;
+    background-color: black;
+    margin-top: 1em;
+    width: 150%;
+}
+
+.hg-theme-default .hg-button {
+    background-color: gray;
+    height: 3.5em;
+    border: none;
+}
