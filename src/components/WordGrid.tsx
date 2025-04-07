@@ -8,8 +8,8 @@ import TileRow from './TileRow'
 
 const WordGrid = () => {
     const [grid, setGrid] = useState([
-        ['A', 'P', 'P', 'L', 'P',],
-        ['H', 'H', 'A', 'N', 'K',],
+        [null, null, null, null, null],
+        [null, null, null, null, null],
         [null, null, null, null, null,],
         [null, null, null, null, null,],
         [null, null, null, null, null,],
@@ -26,7 +26,7 @@ const WordGrid = () => {
     return (
         <SimpleGrid
             columns={5}
-            gap='2'
+            gap='1'
         >
             {grid.map((row, rowId) => {
                 return <TileRow key={rowId} guess={row} rowId={rowId} />

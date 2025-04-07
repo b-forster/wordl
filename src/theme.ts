@@ -22,6 +22,13 @@ export const textStyles = defineTextStyles({
 
 const config = defineConfig({
     theme: {
+        tokens: {
+            colors: {
+                green: { value: '#538d4e' },
+                yellow: { value: '#b59f3b' },
+                gray: { value: '#333' },
+            }
+        },
         textStyles,
     },
 })

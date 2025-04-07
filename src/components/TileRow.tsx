@@ -37,7 +37,7 @@ const TileRow = ({ guess, rowId }: TileRowProps) => {
             decrementCharCount(letter)
             return 'yellow'
         };
-        return;
+        return 'gray';
     }
 
     return (
