@@ -11,12 +11,12 @@ import { useGameStore } from './store/gameStore'
 
 
 function App() {
-  const { isGameOver, resetGame, loadSolutionWords } = useGameStore()
+  const { isGameOver, resetGame, loadWordLists } = useGameStore()
 
-  // Load all possible solution words when the app starts
+  // Load all possible solution words and valid guesses when the app starts
   useEffect(() => {
-    loadSolutionWords()
-  }, [loadSolutionWords])
+    loadWordLists()
+  }, [loadWordLists])
 
   return (
     <ChakraProvider value={theme}>

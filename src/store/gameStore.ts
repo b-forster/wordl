@@ -7,8 +7,9 @@ interface GameState {
     isGameOver: boolean
     solution: string
     solutionWords: string[]
+    validGuesses: Set<string>
 
-    loadSolutionWords: () => Promise<void>
+    loadWordLists: () => Promise<void>
     submitGuess: (guess: Letter[]) => void
     resetGame: () => void
 }
@@ -30,40 +31,64 @@ export const useGameStore = create<GameState>((set, get) => ({
     isGameOver: false,
     solution: '',
     solutionWords: [],
+    validGuesses: new Set<string>(),
 
-    // Load solution words from CSV
-    loadSolutionWords: async () => {
+    // Load word lists from CSV files
+    loadWordLists: async () => {
         try {
-            const response = await fetch('/src/data/valid_solutions.csv');
-            const text = await response.text();
+            // Load solution words
+            const solutionsResponse = await fetch('/src/data/valid_solutions.csv');
+            const solutionsText = await solutionsResponse.text();
 
             // Parse CSV, skip header row, and extract words
-            const words = text
+            const solutionWords = solutionsText
                 .split('\n')
                 .slice(2) // Skip the header and comment line
                 .map(line => line.trim().toUpperCase())
                 .filter(word => word.length === 5); // Ensure we only get 5-letter words
 
+            // Load valid guesses
+            const guessesResponse = await fetch('/src/data/valid_guesses.csv');
+            const guessesText = await guessesResponse.text();
+
+            // Parse CSV, skip header row, and extract words
+            const guessWords = guessesText
+                .split('\n')
+                .slice(2) // Skip the header and comment line
+                .map(line => line.trim().toUpperCase())
+                .filter(word => word.length === 5); // Ensure we only get 5-letter words
+
+            // Create a Set for O(1) lookup
+            const validGuessesSet = new Set<string>([...guessWords, ...solutionWords]);
+
             // Select a random solution
-            const randomSolution = words[Math.floor(Math.random() * words.length)];
+            const randomSolution = solutionWords[Math.floor(Math.random() * solutionWords.length)];
 
             set({
-                solutionWords: words,
+                solutionWords,
+                validGuesses: validGuessesSet,
                 solution: randomSolution
             });
 
             console.log('Selected solution:', randomSolution);
         } catch (error) {
-            console.error('Failed to load solution words:', error);
+            console.error('Failed to load word lists:', error);
         }
     },
 
-    // Submit guess
+    // Submit guess with validation
     submitGuess: (guess: Letter[]) => {
-        const { grid, activeRow, solution } = get()
+        const { grid, activeRow, solution, validGuesses } = get()
 
         if (guess.length < 5) {
             console.log('Not enough letters')
+            return
+        }
+
+        // Check if guess is in valid guesses list
+        const guessWord = guess.join('')
+        if (!validGuesses.has(guessWord)) {
+            console.log('Not in word list')
             return
         }
 
@@ -72,7 +97,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         newGrid[activeRow] = [...guess]
 
         // Check win condition against the current solution
-        if (guess.join('') === solution) {
+        if (guessWord === solution) {
             set({
                 grid: newGrid,
                 activeRow: Infinity,
