@@ -54,6 +54,7 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         // Only process keyboard events if the row is active
         if (!active) return;
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
 
         if (e.key === 'Backspace') {
             setGuess(prev => prev.slice(0, -1))
