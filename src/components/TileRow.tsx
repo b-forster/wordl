@@ -85,7 +85,6 @@ const TileRow = ({ word, rowId, active, onSubmit }: TileRowProps) => {
     // Effect to handle onSubmit when Enter is pressed
     useEffect(() => {
         if (enterPressed && active) {
-            console.log("Submitting guess:", guess);
             onSubmit(guess);
             setEnterPressed(false);
         }
