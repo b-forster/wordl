@@ -189,6 +189,9 @@ export const useGameStore = create<GameState>((set, get) => ({
             console.log('New solution:', newSolution);
         }
 
+        // Dismiss any existing toasts
+        toaster.dismiss();
+
         set({
             grid: createEmptyGrid(),
             activeRow: 0,
