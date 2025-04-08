@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import Tile from './Tile'
-import { Letter } from '../types';
+import { Letter, LetterStatus, letterStatusColorMap } from '../types';
 import { useGameStore } from '../store/gameStore';
 
 interface TileRowProps {
@@ -20,30 +20,40 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
         charCounts.set(char, (charCounts.get(char) || 0) + 1)
     }
 
-    const existsAtPosition = (letter: string, index: number) => {
+    const existsAtPosition = (letter: Letter, index: number) => {
         return answerChars[index] === letter
     }
 
-    const existsInWord = (letter: string) => {
+    const existsInWord = (letter: Letter) => {
         return charCounts.get(letter) > 0
     }
 
-    const decrementCharCount = (letter: string) => {
+    const decrementCharCount = (letter: Letter) => {
         charCounts.set(letter, (charCounts.get(letter) - 1))
     }
 
-    // TODO: Rename function if we keep decrement side effect here
-    const getTileColor = (letter: Letter, index: number) => {
-        if (!letter) return;
+    const evaluateLetterStatus = (letter: Letter, index: number): LetterStatus => {
+        if (!letter) return LetterStatus.UNKNOWN
         if (existsAtPosition(letter, index)) {
-            decrementCharCount(letter)
-            return 'green'
-        };
+            return LetterStatus.CORRECT
+        }
         if (existsInWord(letter)) {
-            decrementCharCount(letter)
-            return 'yellow'
+            return LetterStatus.DIFF_POS
         };
-        return 'gray';
+        return LetterStatus.ABSENT
+    }
+
+
+    const determineTileColorFromStatus = (status: LetterStatus) => {
+        return letterStatusColorMap[status]
+    }
+
+    const processMatchAndGetTileColor = (letter: Letter, index: number) => {
+        const status: LetterStatus = evaluateLetterStatus(letter, index)
+        // Keep track of number of matches in case of repeated letters
+        // ex: for solution 'HAPPY', first two instances of 'P' in guess are yellow/green matches, third is not
+        if (status === LetterStatus.CORRECT || LetterStatus.DIFF_POS) decrementCharCount(letter)
+        return determineTileColorFromStatus(status)
     }
 
     // Track if Enter key was pressed
@@ -106,7 +116,7 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
         word.map((letter, colId) => {
             return <Tile
                 key={`${rowId}${colId}`}
-                color={getTileColor(word[colId], colId)}
+                color={processMatchAndGetTileColor(word[colId], colId)}
             >
                 {letter}
             </Tile>
