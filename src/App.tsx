@@ -8,8 +8,7 @@ import theme from './theme'
 import {
   Button,
   ChakraProvider,
-  Flex,
-  Box
+  VStack
 } from "@chakra-ui/react"
 import { useGameStore } from './store/gameStore'
 
@@ -24,26 +23,24 @@ function App() {
 
   return (
     <ChakraProvider value={theme}>
-      <Flex direction="column" minHeight="100vh">
+      <VStack>
         <Header />
-        <Box flex="1">
-          <WordGrid />
-          {isGameOver && (
-            <Button
-              rounded='full'
-              variant='outline'
-              w='60%'
-              p={5}
-              m={8}
-              onClick={resetGame}
-            >
-              Play again
-            </Button>
-          )}
-          {!isGameOver && <KeyBoard />}
-        </Box>
+        <WordGrid />
+        {isGameOver && (
+          <Button
+            rounded='full'
+            variant='outline'
+            w='60%'
+            p={5}
+            m={8}
+            onClick={resetGame}
+          >
+            Play again
+          </Button>
+        )}
+        {!isGameOver && <KeyBoard />}
         <Footer />
-      </Flex>
+      </VStack>
     </ChakraProvider>
   )
 }

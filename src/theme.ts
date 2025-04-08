@@ -27,6 +27,7 @@ const config = defineConfig({
                 green: { value: '#538d4e' },
                 yellow: { value: '#b59f3b' },
                 gray: { value: '#333' },
+                black: { value: '#111' },
             }
         },
         textStyles,

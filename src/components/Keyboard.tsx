@@ -45,7 +45,6 @@ const KeyBoard = () => {
                 display={display}
                 // buttonTheme={buttonTheme}
                 // theme={'keyboard'}
-                // onChange={onChange}
                 onKeyPress={onKeyPress}
             />
         </>

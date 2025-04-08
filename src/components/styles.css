@@ -2,11 +2,26 @@
     font-weight: 800;
     background-color: black;
     margin-top: 1em;
-    width: 150%;
+    width: 170%;
+}
+
+.hg-theme-default .hg-row {
+    justify-content: center;
 }
 
 .hg-theme-default .hg-button {
     background-color: gray;
     height: 3.5em;
     border: none;
+    margin: 2px;
+    padding: 3px;
+    flex-grow: 0;
+}
+
+.hg-theme-default .hg-button.hg-standardBtn {
+    width: 2.5em;
+}
+
+.hg-button.hg-functionBtn {
+    width: 4em;
 }
