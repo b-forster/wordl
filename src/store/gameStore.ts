@@ -171,6 +171,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             })
             toaster.create({
                 description: solution,
+                duration: Infinity,
             })
             return
         }

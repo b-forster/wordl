@@ -17,6 +17,7 @@ export const toaster = createToaster({
     bottom: '0',
   },
   duration: 1200,
+  max: 1,
   pauseOnPageIdle: true,
 })
 
@@ -24,7 +25,15 @@ export const Toaster = () => {
   return (
     <ChakraToaster toaster={toaster} insetInline={{ mdDown: "4" }}>
       {(toast) => (
-        <Toast.Root width={{ md: "sm" }}>
+        <Toast.Root
+          color='black'
+          fontSize='xs'
+          fontWeight='bold'
+          textWrap='nowrap'
+          width='fit-content'
+          padding='0.8em'
+          backgroundColor='white'
+        >
           {toast.type === "loading" ? (
             <Spinner size="sm" color="blue.solid" />
           ) : (
