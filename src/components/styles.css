@@ -25,3 +25,11 @@
 .hg-button.hg-functionBtn {
     width: 4em;
 }
+
+.hg-button-enter span {
+    font-size: 0.8em;
+}
+
+.hg-button-bksp span {
+    font-size: 1.1em;
+}

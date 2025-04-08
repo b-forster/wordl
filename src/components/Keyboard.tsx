@@ -16,11 +16,11 @@ const KeyBoard = () => {
         ]
     }
     const display = {
-        '{bksp}': '⬅︎',
+        '{bksp}': '⌫',
         '{enter}': 'ENTER',
     }
 
-    const onKeyPress = useCallback((button: string) => {
+    const onKeyReleased = useCallback((button: string) => {
         // Don't process keyboard events if the game is over
         if (isGameOver) return;
 
@@ -45,7 +45,7 @@ const KeyBoard = () => {
                 display={display}
                 // buttonTheme={buttonTheme}
                 // theme={'keyboard'}
-                onKeyPress={onKeyPress}
+                onKeyReleased={onKeyReleased}
             />
         </>
     )
