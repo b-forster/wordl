@@ -1,4 +1,4 @@
-import { SimpleGrid } from '@chakra-ui/react'
+import { Box, SimpleGrid } from '@chakra-ui/react'
 import TileRow from './TileRow'
 import { useGameStore } from '../store/gameStore'
 import { Toaster } from '@/components/ui/toaster'
@@ -12,8 +12,20 @@ const WordGrid = () => {
     }
 
     return (
-        <>
-            <Toaster />
+        <Box position="relative">
+            {/* Toast container positioned relative to this Box */}
+            <Box
+                position="absolute"
+                top="-2.5rem"
+                left="50%"
+                transform="translateX(-50%)"
+                zIndex="toast"
+                width="100%"
+                maxWidth="sm"
+                textAlign="center"
+            >
+                <Toaster />
+            </Box>
             <SimpleGrid
                 columns={5}
                 gap='1.5'
@@ -23,7 +35,7 @@ const WordGrid = () => {
                 })}
 
             </SimpleGrid >
-        </>
+        </Box>
     )
 }
 
