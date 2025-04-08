@@ -52,3 +52,6 @@ export default tseslint.config({
   },
 })
 ```
+# Attributions
+
+<a href="https://www.flaticon.com/free-icons/capital-letter" title="capital letter icons">Capital letter icons created by ArtBit - Flaticon</a>
