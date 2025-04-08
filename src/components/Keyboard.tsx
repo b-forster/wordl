@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
+import { useGameStore } from "../store/gameStore";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import './styles.css'
@@ -6,6 +7,7 @@ import './styles.css'
 
 const KeyBoard = () => {
     const keyboard = useRef('');
+    const { addLetter, removeLetter, submitGuess, isGameOver } = useGameStore();
     const layout = {
         'default': [
             'Q W E R T Y U I O P',
@@ -17,20 +19,22 @@ const KeyBoard = () => {
         '{bksp}': '⬅︎',
         '{enter}': 'ENTER',
     }
-    // const buttonTheme = [
-    //     {
-    //         class: "hg-red",
-    //         // buttons: "Q W E R T Y q w e r t y"
-    //     },
-    //     {
-    //         // class: "hg-highlight",
-    //         // buttons: "Q q"
-    //     }
-    // ]
 
-    const onKeyPress = (button: string) => {
-        console.log("Button pressed", button);
-    };
+    const onKeyPress = useCallback((button: string) => {
+        // Don't process keyboard events if the game is over
+        if (isGameOver) return;
+
+        if (button === '{bksp}') {
+            removeLetter();
+        }
+        else if (button === '{enter}') {
+            submitGuess();
+        }
+        else {
+            // For regular letter keys
+            addLetter(button);
+        }
+    }, [addLetter, removeLetter, submitGuess, isGameOver]);
 
     return (
         <>

@@ -8,10 +8,14 @@ interface GameState {
     solution: string
     solutionWords: string[]
     validGuesses: Set<string>
+    currentGuess: Letter[]
 
     loadWordLists: () => Promise<void>
-    submitGuess: (guess: Letter[]) => void
+    submitGuess: (guess?: Letter[]) => void
     resetGame: () => void
+    addLetter: (letter: string) => void
+    removeLetter: () => void
+    clearGuess: () => void
 }
 
 // Initial empty grid
@@ -32,6 +36,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     solution: '',
     solutionWords: [],
     validGuesses: new Set<string>(),
+    currentGuess: [],
 
     // Load word lists from CSV files
     loadWordLists: async () => {
@@ -76,17 +81,48 @@ export const useGameStore = create<GameState>((set, get) => ({
         }
     },
 
-    // Submit guess with validation
-    submitGuess: (guess: Letter[]) => {
-        const { grid, activeRow, solution, validGuesses } = get()
+    // Add a letter to the current guess
+    addLetter: (letter: string) => {
+        const { currentGuess, isGameOver } = get()
 
-        if (guess.length < 5) {
+        // Don't add letters if the game is over
+        if (isGameOver) return
+
+        // Only add the letter if we have less than 5 letters
+        if (currentGuess.length < 5) {
+            set({ currentGuess: [...currentGuess, letter.toUpperCase()] })
+        }
+    },
+
+    // Remove the last letter from the current guess
+    removeLetter: () => {
+        const { currentGuess, isGameOver } = get()
+
+        // Don't remove letters if the game is over
+        if (isGameOver) return
+
+        set({ currentGuess: currentGuess.slice(0, -1) })
+    },
+
+    // Clear the current guess
+    clearGuess: () => {
+        set({ currentGuess: [] })
+    },
+
+    // Submit guess with validation
+    submitGuess: (guess?: Letter[]) => {
+        const { grid, activeRow, solution, validGuesses, currentGuess } = get()
+
+        // Use provided guess or current guess from state
+        const guessToSubmit = guess || currentGuess
+
+        if (guessToSubmit.length < 5) {
             console.log('Not enough letters')
             return
         }
 
         // Check if guess is in valid guesses list
-        const guessWord = guess.join('')
+        const guessWord = guessToSubmit.join('')
         if (!validGuesses.has(guessWord)) {
             console.log('Not in word list')
             return
@@ -94,14 +130,15 @@ export const useGameStore = create<GameState>((set, get) => ({
 
         // Create a new grid with the current guess in the active row
         const newGrid = [...grid]
-        newGrid[activeRow] = [...guess]
+        newGrid[activeRow] = [...guessToSubmit]
 
         // Check win condition against the current solution
         if (guessWord === solution) {
             set({
                 grid: newGrid,
                 activeRow: Infinity,
-                isGameOver: true
+                isGameOver: true,
+                currentGuess: []
             })
             return
         }
@@ -109,7 +146,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         // Move to the next row
         set({
             grid: newGrid,
-            activeRow: activeRow + 1
+            activeRow: activeRow + 1,
+            currentGuess: []
         })
 
 
@@ -117,7 +155,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         if (activeRow >= grid.length - 1) {
             set({
                 grid: newGrid,
-                isGameOver: true
+                isGameOver: true,
+                currentGuess: []
             })
             return
         }
@@ -139,7 +178,8 @@ export const useGameStore = create<GameState>((set, get) => ({
             grid: createEmptyGrid(),
             activeRow: 0,
             isGameOver: false,
-            solution: newSolution
+            solution: newSolution,
+            currentGuess: []
         })
     }
 }))

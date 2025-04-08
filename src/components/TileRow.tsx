@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import Tile from './Tile'
 import { Letter } from '../types';
 import { useGameStore } from '../store/gameStore';
@@ -10,8 +10,7 @@ interface TileRowProps {
 }
 
 const TileRow = ({ word, rowId, active }: TileRowProps) => {
-    const { submitGuess, solution } = useGameStore();
-    const [guess, setGuess] = useState<Letter[]>([])
+    const { submitGuess, solution, currentGuess, addLetter, removeLetter } = useGameStore();
 
     // Use the solution from the store
     const answerChars = solution.split('');
@@ -57,21 +56,15 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
         if (e.ctrlKey || e.metaKey || e.altKey) return;
 
         if (e.key === 'Backspace') {
-            setGuess(prev => prev.slice(0, -1))
+            removeLetter();
         }
         else if (/^[A-Za-z]$/.test(e.key)) {
-            setGuess(prev => {
-                // Only add the letter if we have less than 5 letters
-                if (prev.length < 5) {
-                    return [...prev, e.key.toUpperCase()]
-                }
-                return prev
-            })
+            addLetter(e.key);
         }
         else if (e.key === 'Enter') {
             setEnterPressed(true);
         }
-    }, [active, setGuess, setEnterPressed]);
+    }, [active, addLetter, removeLetter, setEnterPressed]);
 
     // Handle keyboard events
     useEffect(() => {
@@ -87,21 +80,14 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
     // Submit guess when Enter is pressed
     useEffect(() => {
         if (enterPressed && active) {
-            submitGuess(guess);
+            submitGuess();
             setEnterPressed(false);
         }
-    }, [enterPressed, guess, submitGuess, active]);
-
-    // Reset guess when the row becomes active (e.g., after game reset)
-    useEffect(() => {
-        if (active) {
-            setGuess([]);
-        }
-    }, [active]);
+    }, [enterPressed, submitGuess, active]);
 
     // Render either current in progress guess if row is active,
     // or previously submitted guess if not active
-    const guessLetters: Letter[] = active ? [...guess] : [...word];
+    const guessLetters: Letter[] = active ? [...currentGuess] : [...word];
 
     // If active row, fill remaining slots with null
     if (active) {
