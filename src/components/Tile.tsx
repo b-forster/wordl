@@ -12,8 +12,8 @@ const Tile = ({ children, color }: TileProps) => {
 
     return (
         <Box
-            h='3.5rem'
-            w='3.5rem'
+            h='3.2rem'
+            w='3.2rem'
             borderWidth={color ? 0 : '2px'}
             borderColor='gray'
             backgroundColor={color}

@@ -12,7 +12,7 @@ const WordGrid = () => {
     return (
         <SimpleGrid
             columns={5}
-            gap='1'
+            gap='1.5'
         >
             {grid.map((row, rowId) => {
                 return <TileRow key={rowId} word={row} rowId={rowId} active={isActiveRow(rowId)} />

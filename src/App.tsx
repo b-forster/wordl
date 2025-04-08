@@ -23,7 +23,7 @@ function App() {
 
   return (
     <ChakraProvider value={theme}>
-      <VStack>
+      <VStack gap='0'>
         <Header />
         <WordGrid />
         {isGameOver && (
