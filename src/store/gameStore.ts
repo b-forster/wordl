@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { Letter } from '../types'
+import { toaster } from "@/components/ui/toaster"
 
 interface GameState {
     grid: Letter[][]
@@ -117,14 +118,18 @@ export const useGameStore = create<GameState>((set, get) => ({
         const guessToSubmit = guess || currentGuess
 
         if (guessToSubmit.length < 5) {
-            console.log('Not enough letters')
+            toaster.create({
+                description: 'Not enough letters',
+            })
             return
         }
 
         // Check if guess is in valid guesses list
         const guessWord = guessToSubmit.join('')
         if (!validGuesses.has(guessWord)) {
-            console.log('Not in word list')
+            toaster.create({
+                description: 'Not in word list',
+            })
             return
         }
 
@@ -134,6 +139,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 
         // Check win condition against the current solution
         if (guessWord === solution) {
+            // Generate message on victory based on number of guesses
+            const winMessages: string[] = ["Genius", "Magnificent", "Impressive", "Splendid", "Great", "Phew"]
+            toaster.create({
+                description: winMessages[activeRow] || 'Great!',
+            })
+
             set({
                 grid: newGrid,
                 activeRow: Infinity,
@@ -157,6 +168,9 @@ export const useGameStore = create<GameState>((set, get) => ({
                 grid: newGrid,
                 isGameOver: true,
                 currentGuess: []
+            })
+            toaster.create({
+                description: solution,
             })
             return
         }
