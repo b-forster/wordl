@@ -6,15 +6,15 @@ import Footer from './components/Footer'
 import KeyBoard from './components/Keyboard'
 import theme from './theme'
 import {
-  Button,
   ChakraProvider,
   VStack
 } from "@chakra-ui/react"
 import { useGameStore } from './store/gameStore'
+import PlayAgainButton from './components/PlayAgainButton'
 
 
 function App() {
-  const { isGameOver, resetGame, loadWordLists } = useGameStore()
+  const { isGameOver, loadWordLists } = useGameStore()
 
   // Load all possible solution words and valid guesses when the app starts
   useEffect(() => {
@@ -26,19 +26,7 @@ function App() {
       <VStack gap='0'>
         <Header />
         <WordGrid />
-        {isGameOver && (
-          <Button
-            rounded='full'
-            variant='outline'
-            w='60%'
-            p={5}
-            m={8}
-            onClick={resetGame}
-          >
-            Play again
-          </Button>
-        )}
-        {!isGameOver && <KeyBoard />}
+        {isGameOver ? <PlayAgainButton /> : <KeyBoard />}
         <Footer />
       </VStack>
     </ChakraProvider>
