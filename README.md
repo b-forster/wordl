@@ -1,57 +1,69 @@
-# React + TypeScript + Vite
+# WORDL - A Wordle Clone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React implementation of the popular word-guessing game Wordle, built with TypeScript, Vite, and Chakra UI.
 
-Currently, two official plugins are available:
+<!-- ![Wordl Game Screenshot](public/screenshot.png) -->
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Word Guessing Game**: Try to guess a 5-letter word in 6 attempts
+- **Color Feedback**: Get feedback on your guesses with colored tiles
+  - $${\textbf{\color{lightgreen}Green:}}$$ Letter is in the correct position
+  - $${\textbf{\color{gold}Yellow:}}$$  Letter is in the word but in the wrong position
+  - $${\textbf{\color{lightgray}Gray:}}$$ Letter is not in the word
+- **Keyboard Support**: 
+  - Use your physical keyboard to type guesses
+  - Use the on-screen keyboard by clicking or tapping
+  - Press Enter to submit guesses
+- **Toast Notifications**: Receive feedback messages for invalid guesses or when the game ends
+- **Responsive Design**: Play on desktop or mobile devices
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Recent Updates
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Added support for pressing Enter to start a new game when the "Play Again" button is visible
+- Fixed toast persistence issue so solution toasts are properly dismissed when starting a new game
+- Improved keyboard handling for a more seamless user experience
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Planned Features & Fixes
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Change color of on-screen keyboard keys to match tile colors after guess
+- Add tile row reveal animation after a guess is submitted
+- Add tile row shaking animation when an error toast is shown
+- Improve responsiveness for mobile devices
+- Debug build for deployment
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## How to Play
+
+1. The game will select a random 5-letter word
+2. Type your guess using your keyboard or the on-screen keyboard
+3. Press Enter to submit your guess
+4. The tiles will change color to provide feedback
+5. Keep guessing until you find the word or run out of attempts
+6. Press Enter or click "Play Again" to start a new game
+
+## Development
+
+This project is built with:
+- React 18
+- TypeScript
+- Vite
+- Chakra UI
+- Zustand for state management
+- Cline VSCode extension for system design feedback and debugging
+
+### Running Locally
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
 ```
 # Attributions
 
-<a href="https://www.flaticon.com/free-icons/capital-letter" title="capital letter icons">Capital letter icons created by ArtBit - Flaticon</a>
+- Inspiration: <a href="https://www.nytimes.com/games/wordle/index.html" title="Wordle">Wordle by New York Times</a>
+- Favicon: <a href="https://www.flaticon.com/free-icons/capital-letter" title="capital letter icons">Capital letter icons created by ArtBit - Flaticon</a>
