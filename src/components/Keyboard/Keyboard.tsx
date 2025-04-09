@@ -1,5 +1,5 @@
 import { useRef, useCallback } from "react";
-import { useGameStore } from "../store/gameStore";
+import { useGameStore } from "../../store/gameStore";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import './styles.css'

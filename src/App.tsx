@@ -3,7 +3,7 @@ import './App.css'
 import Header from './components/Header'
 import WordGrid from './components/WordGrid'
 import Footer from './components/Footer'
-import KeyBoard from './components/Keyboard'
+import KeyBoard from './components/Keyboard/Keyboard'
 import theme from './theme'
 import {
   ChakraProvider,
