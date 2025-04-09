@@ -73,7 +73,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             set({
                 solutionWords,
                 validGuesses: validGuessesSet,
-                solution: randomSolution
+                solution: randomSolution,
             });
 
             console.log('Selected solution:', randomSolution);
@@ -197,7 +197,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             activeRow: 0,
             isGameOver: false,
             solution: newSolution,
-            currentGuess: []
+            currentGuess: [],
         })
     }
 }))

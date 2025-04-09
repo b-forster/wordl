@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import Tile from './Tile'
-import { Letter, LetterStatus, letterStatusColorMap } from '../types';
+import { CharCounts, Letter } from '../types';
+import { processMatchAndGetTileColor } from '../utils/wordUtils';
 import { useGameStore } from '../store/gameStore';
 
 interface TileRowProps {
@@ -10,51 +11,7 @@ interface TileRowProps {
 }
 
 const TileRow = ({ word, rowId, active }: TileRowProps) => {
-    const { submitGuess, solution, currentGuess, addLetter, removeLetter } = useGameStore();
-
-    // Use the solution from the store
-    const answerChars = solution.split('');
-    const charCounts = new Map()
-
-    for (const char of answerChars) {
-        charCounts.set(char, (charCounts.get(char) || 0) + 1)
-    }
-
-    const existsAtPosition = (letter: Letter, index: number) => {
-        return answerChars[index] === letter
-    }
-
-    const existsInWord = (letter: Letter) => {
-        return charCounts.get(letter) > 0
-    }
-
-    const decrementCharCount = (letter: Letter) => {
-        charCounts.set(letter, (charCounts.get(letter) - 1))
-    }
-
-    const evaluateLetterStatus = (letter: Letter, index: number): LetterStatus => {
-        if (!letter) return LetterStatus.UNKNOWN
-        if (existsAtPosition(letter, index)) {
-            return LetterStatus.CORRECT
-        }
-        if (existsInWord(letter)) {
-            return LetterStatus.DIFF_POS
-        };
-        return LetterStatus.ABSENT
-    }
-
-
-    const determineTileColorFromStatus = (status: LetterStatus) => {
-        return letterStatusColorMap[status]
-    }
-
-    const processMatchAndGetTileColor = (letter: Letter, index: number) => {
-        const status: LetterStatus = evaluateLetterStatus(letter, index)
-        // Keep track of number of matches in case of repeated letters
-        // ex: for solution 'HAPPY', first two instances of 'P' in guess are yellow/green matches, third is not
-        if (status === LetterStatus.CORRECT || LetterStatus.DIFF_POS) decrementCharCount(letter)
-        return determineTileColorFromStatus(status)
-    }
+    const { currentGuess, solution, addLetter, removeLetter, submitGuess } = useGameStore();
 
     // Track if Enter key was pressed
     const [enterPressed, setEnterPressed] = useState(false);
@@ -99,8 +56,9 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
     // or previously submitted guess if not active
     const guessLetters: Letter[] = active ? [...currentGuess] : [...word];
 
-    // If active row, fill remaining slots with null
+    // For editable row with a guess in progress
     if (active) {
+        // Populate with empty tiles as needed to fill out row
         while (guessLetters.length < 5) {
             guessLetters.push(null)
         }
@@ -112,11 +70,20 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
         )
     }
 
+    // For non-editable rows (previous guesses or blank rows for future guesses)
+
+    // Create map of counts for each character
+    // to keep track of letter matches in case of repeated letters
+    const charCounts: CharCounts = new Map()
+    for (const char of solution) {
+        charCounts.set(char, (charCounts.get(char) || 0) + 1)
+    }
+
     return (
         word.map((letter, colId) => {
             return <Tile
                 key={`${rowId}${colId}`}
-                color={processMatchAndGetTileColor(word[colId], colId)}
+                color={processMatchAndGetTileColor(solution, letter, colId, charCounts)}
             >
                 {letter}
             </Tile>
