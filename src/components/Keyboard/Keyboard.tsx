@@ -7,7 +7,7 @@ import './styles.css'
 
 const KeyBoard = () => {
     const keyboard = useRef('');
-    const { addLetter, removeLetter, submitGuess, isGameOver } = useGameStore();
+    const { addLetter, removeLetter, submitGuess, isGameOver, correctLetters, diffPosLetters, wrongLetters } = useGameStore();
     const layout = {
         'default': [
             'Q W E R T Y U I O P',
@@ -36,6 +36,26 @@ const KeyBoard = () => {
         }
     }, [addLetter, removeLetter, submitGuess, isGameOver]);
 
+    const getButtonTheme = () => {
+        const buttonTheme = [
+            {
+                class: "key-green",
+                buttons: [...correctLetters].join(' '),
+            },
+            {
+                class: "key-yellow",
+                buttons: [...diffPosLetters].join(' '),
+            },
+            {
+                class: "key-gray",
+                buttons: [...wrongLetters].join(' '),
+            },
+        ];
+
+
+        return buttonTheme;
+    }
+
     return (
         <>
             <Keyboard
@@ -43,8 +63,7 @@ const KeyBoard = () => {
                 layout={layout}
                 layoutName={'default'}
                 display={display}
-                // buttonTheme={buttonTheme}
-                // theme={'keyboard'}
+                buttonTheme={getButtonTheme()}
                 onKeyReleased={onKeyReleased}
             />
         </>

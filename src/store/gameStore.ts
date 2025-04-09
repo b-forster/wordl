@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { Letter } from '../types'
 import { toaster } from "@/components/ui/toaster"
+import { existsAtPosition, existsInWord } from '../utils/wordUtils'
 
 interface GameState {
     grid: Letter[][]
@@ -10,6 +11,9 @@ interface GameState {
     solutionWords: string[]
     validGuesses: Set<string>
     currentGuess: Letter[]
+    correctLetters: Set<Letter>
+    diffPosLetters: Set<Letter>
+    wrongLetters: Set<Letter>
 
     loadWordLists: () => Promise<void>
     submitGuess: (guess?: Letter[]) => void
@@ -38,6 +42,9 @@ export const useGameStore = create<GameState>((set, get) => ({
     solutionWords: [],
     validGuesses: new Set<string>(),
     currentGuess: [],
+    correctLetters: new Set(),
+    diffPosLetters: new Set(),
+    wrongLetters: new Set(),
 
     // Load word lists from CSV files
     loadWordLists: async () => {
@@ -112,7 +119,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     // Submit guess with validation
     submitGuess: (guess?: Letter[]) => {
-        const { grid, activeRow, solution, validGuesses, currentGuess } = get()
+        const { grid, activeRow, solution, validGuesses, currentGuess, correctLetters, diffPosLetters, wrongLetters } = get()
 
         // Use provided guess or current guess from state
         const guessToSubmit = guess || currentGuess
@@ -132,6 +139,26 @@ export const useGameStore = create<GameState>((set, get) => ({
             })
             return
         }
+
+        let correct = new Set(correctLetters)
+        let diffPos = new Set(diffPosLetters)
+        let wrong = new Set(wrongLetters)
+        for (const [index, letter] of guessToSubmit.entries()) {
+            if (correctLetters.has(letter) || wrongLetters.has(letter)) break;
+            if (existsAtPosition(letter, index, solution)) {
+                correct.add(letter)
+                diffPos.delete(letter)
+            } else if (existsInWord(letter, solution)) {
+                diffPos.add(letter)
+            } else {
+                wrong.add(letter)
+            }
+        }
+        set({ correctLetters: correct })
+        set({ diffPosLetters: diffPos })
+        set({ wrongLetters: wrong })
+
+
 
         // Create a new grid with the current guess in the active row
         const newGrid = [...grid]
@@ -198,6 +225,9 @@ export const useGameStore = create<GameState>((set, get) => ({
             isGameOver: false,
             solution: newSolution,
             currentGuess: [],
+            correctLetters: new Set(),
+            diffPosLetters: new Set(),
+            wrongLetters: new Set(),
         })
     }
 }))

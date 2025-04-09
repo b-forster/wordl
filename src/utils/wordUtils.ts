@@ -6,10 +6,9 @@ export const existsAtPosition = (letter: Letter, index: number, word: string): b
 };
 
 // Helper function to determine if a letter exists anywhere in the solution
-export const existsInWord = (letter: Letter, charCountsMap: CharCounts): boolean => {
+export const existsInWord = (letter: Letter, word: string): boolean => {
     if (!letter) return false;
-    const count = charCountsMap.get(letter);
-    return !!count && count > 0;
+    return word.includes(letter)
 };
 
 // Helper function to decrement the count of a letter in the charCounts map
@@ -24,7 +23,6 @@ export const evaluateLetterStatus = (
     letter: Letter,
     index: number,
     solution: string,
-    charCountsMap: CharCounts
 ): LetterStatus => {
     if (!letter) return LetterStatus.UNKNOWN;
 
@@ -32,7 +30,7 @@ export const evaluateLetterStatus = (
         return LetterStatus.CORRECT;
     }
 
-    if (existsInWord(letter, charCountsMap)) {
+    if (existsInWord(letter, solution)) {
         return LetterStatus.DIFF_POS;
     }
 
@@ -57,7 +55,7 @@ export const processMatchAndGetTileColor = (
     const counts = charCountsMap || createCharCounts(solution);
 
     // Get the letter match status
-    const status = evaluateLetterStatus(letter, index, solution, counts);
+    const status = evaluateLetterStatus(letter, index, solution);
 
     // Keep track of number of matches in case of repeated letters
     // ex: for solution 'HAPPY', first two instances of 'P' in guess are yellow/green matches, third is not

@@ -33,3 +33,15 @@
 .hg-button-bksp span {
     font-size: 1.1em;
 }
+
+.key-green {
+    background-color: #538d4e !important;
+}
+
+.key-yellow {
+    background-color: #b59f3b !important;
+}
+
+.key-gray {
+    background-color: #333 !important;
+}
