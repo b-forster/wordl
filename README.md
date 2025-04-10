@@ -27,7 +27,6 @@ A React implementation of the popular word-guessing game Wordle, built with Type
 
 ## Planned Features & Fixes
 
-- Debug build for deployment
 - Improve responsiveness for mobile devices
 - Add tile row reveal animation after a guess is submitted
 - Add tile row shaking animation when an error toast is shown

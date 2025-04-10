@@ -50,7 +50,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     loadWordLists: async () => {
         try {
             // Load solution words
-            const solutionsResponse = await fetch('/src/data/valid_solutions.csv');
+            const solutionsResponse = await fetch('/valid_solutions.csv');
             const solutionsText = await solutionsResponse.text();
 
             // Parse CSV, skip header row, and extract words
@@ -61,7 +61,7 @@ export const useGameStore = create<GameState>((set, get) => ({
                 .filter(word => word.length === 5); // Ensure we only get 5-letter words
 
             // Load valid guesses
-            const guessesResponse = await fetch('/src/data/valid_guesses.csv');
+            const guessesResponse = await fetch('/valid_guesses.csv');
             const guessesText = await guessesResponse.text();
 
             // Parse CSV, skip header row, and extract words
