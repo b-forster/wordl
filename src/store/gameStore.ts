@@ -140,20 +140,31 @@ export const useGameStore = create<GameState>((set, get) => ({
             return
         }
 
+        // Update letter status for onscreen keyboard
+
+        // NOTE: Green/yellow status works differently than on word grid tiles.
+        // Grid tiles: based on position in guess; same letter color can change between guesses
+        // Keyboard: based on most correct guess up to that point; green key will never turn yellow
+
         let correct = new Set(correctLetters)
         let diffPos = new Set(diffPosLetters)
         let wrong = new Set(wrongLetters)
+
         for (const [index, letter] of guessToSubmit.entries()) {
-            if (correctLetters.has(letter) || wrongLetters.has(letter)) break;
+            // Skip checks if letter is already classified
+            if (correct.has(letter) || wrong.has(letter)) continue
+
             if (existsAtPosition(letter, index, solution)) {
                 correct.add(letter)
-                diffPos.delete(letter)
+                diffPos.delete(letter) // Green status supercedes yellow
             } else if (existsInWord(letter, solution)) {
                 diffPos.add(letter)
             } else {
                 wrong.add(letter)
             }
         }
+
+        // Update letter status in the store
         set({ correctLetters: correct })
         set({ diffPosLetters: diffPos })
         set({ wrongLetters: wrong })
