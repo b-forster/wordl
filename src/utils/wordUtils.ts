@@ -2,6 +2,7 @@ import { Letter, LetterStatus, letterStatusColorMap, CharCounts } from '../types
 
 // Helper function to determine if a letter exists at a specific position in the solution
 export const existsAtPosition = (letter: Letter, index: number, word: string): boolean => {
+    if (!letter) return false;
     return word.charAt(index) === letter;
 };
 
@@ -10,6 +11,13 @@ export const existsInWord = (letter: Letter, word: string): boolean => {
     if (!letter) return false;
     return word.includes(letter)
 };
+
+// Helper function to determine if a letter exists and has not yet appeared enought times in current guess
+const remainsInWord = (letter: Letter, remainingChars: CharCounts): boolean => {
+    if (!letter) return false;
+    const counts = remainingChars.get(letter) || 0;
+    return counts > 0;
+}
 
 // Helper function to decrement the count of a letter in the charCounts map
 export const decrementCharCount = (letter: Letter, charCountsMap: CharCounts): void => {
@@ -22,15 +30,17 @@ export const decrementCharCount = (letter: Letter, charCountsMap: CharCounts): v
 export const evaluateLetterStatus = (
     letter: Letter,
     index: number,
-    solution: string,
+    word: string,
+    remainingChars: CharCounts
 ): LetterStatus => {
     if (!letter) return LetterStatus.UNKNOWN;
 
-    if (existsAtPosition(letter, index, solution)) {
+    if (existsAtPosition(letter, index, word)) {
         return LetterStatus.CORRECT;
     }
 
-    if (existsInWord(letter, solution)) {
+    if (remainsInWord(letter, remainingChars)) {
+        // Check if the letter exists in the word and has a positive count in remainingChars
         return LetterStatus.DIFF_POS;
     }
 
@@ -47,20 +57,17 @@ export const processMatchAndGetTileColor = (
     solution: string,
     letter: Letter,
     index: number,
-    charCountsMap?: CharCounts
+    remainingChars: CharCounts
 ): string | undefined => {
     if (!letter) return undefined;
 
-    // If charCounts is not provided, create a new one
-    const counts = charCountsMap || createCharCounts(solution);
-
     // Get the letter match status
-    const status = evaluateLetterStatus(letter, index, solution);
+    const status: LetterStatus = evaluateLetterStatus(letter, index, solution, remainingChars);
 
     // Keep track of number of matches in case of repeated letters
     // ex: for solution 'HAPPY', first two instances of 'P' in guess are yellow/green matches, third is not
     if (status === LetterStatus.CORRECT || status === LetterStatus.DIFF_POS) {
-        decrementCharCount(letter, counts);
+        decrementCharCount(letter, remainingChars);
     }
 
     return determineTileColorFromStatus(status);
@@ -68,9 +75,9 @@ export const processMatchAndGetTileColor = (
 
 // Helper function to create a character counts map from a string
 export const createCharCounts = (word: string): CharCounts => {
-    const counts = new Map<string, number>();
+    const counts: CharCounts = new Map();
 
-    for (const char of word.split('')) {
+    for (const char of word) {
         counts.set(char, (counts.get(char) || 0) + 1);
     }
 

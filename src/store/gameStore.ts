@@ -152,7 +152,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
         for (const [index, letter] of guessToSubmit.entries()) {
             // Skip checks if letter is already classified
-            if (correct.has(letter) || wrong.has(letter)) continue
+            if (!letter || correct.has(letter) || wrong.has(letter)) continue
 
             if (existsAtPosition(letter, index, solution)) {
                 correct.add(letter)
