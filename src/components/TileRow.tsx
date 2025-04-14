@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import Tile from './Tile'
-import { CharCounts, Letter } from '../types';
-import { createCharCounts, processMatchAndGetTileColor } from '../utils/wordUtils';
+import { CharCounts, Letter, LetterStatus } from '../types';
+import { createCharCounts, processMatchAndGetTileColor, evaluateGuess, determineTileColorFromStatus } from '../utils/wordUtils';
 import { useGameStore } from '../store/gameStore';
 
 interface TileRowProps {
@@ -71,12 +71,13 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
     }
 
     // For non-editable rows without a guess in progress
-    const remainingChars: CharCounts = createCharCounts(solution)
+    const letterStatuses = evaluateGuess(word, solution);
+
     return (
         word.map((letter, colId) => {
             return <Tile
                 key={`${rowId}${colId}`}
-                color={processMatchAndGetTileColor(solution, letter, colId, remainingChars)}
+                color={determineTileColorFromStatus(letterStatuses[colId])}
             >
                 {letter}
             </Tile>

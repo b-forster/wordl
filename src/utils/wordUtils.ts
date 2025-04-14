@@ -1,5 +1,43 @@
 import { Letter, LetterStatus, letterStatusColorMap, CharCounts } from '../types';
 
+// Main function to evaluate a guess against a solution using a two-pass approach
+export const evaluateGuess = (
+    guess: Letter[],
+    solution: string
+): LetterStatus[] => {
+    // Initialize result array with UNKNOWN status
+    const result: LetterStatus[] = Array(guess.length).fill(LetterStatus.UNKNOWN);
+
+    // Create a map of character counts from the solution
+    const remainingChars: CharCounts = createCharCounts(solution);
+
+    // First pass: Mark correct (green) letters and decrement counts
+    for (let i = 0; i < guess.length; i++) {
+        const letter = guess[i];
+        if (!letter) continue;
+
+        if (existsAtPosition(letter, i, solution)) {
+            result[i] = LetterStatus.CORRECT;
+            decrementCharCount(letter, remainingChars);
+        }
+    }
+
+    // Second pass: Mark incorrect position (yellow) or absent (gray) letters
+    for (let i = 0; i < guess.length; i++) {
+        const letter = guess[i];
+        if (!letter || result[i] === LetterStatus.CORRECT) continue;
+
+        if (remainsInWord(letter, remainingChars)) {
+            result[i] = LetterStatus.DIFF_POS;
+            decrementCharCount(letter, remainingChars);
+        } else {
+            result[i] = LetterStatus.ABSENT;
+        }
+    }
+
+    return result;
+};
+
 // Helper function to determine if a letter exists at a specific position in the solution
 export const existsAtPosition = (letter: Letter, index: number, word: string): boolean => {
     if (!letter) return false;
