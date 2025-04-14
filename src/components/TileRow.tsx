@@ -1,8 +1,9 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Tile from './Tile'
-import { CharCounts, Letter, LetterStatus } from '../types';
-import { createCharCounts, processMatchAndGetTileColor, evaluateGuess, determineTileColorFromStatus } from '../utils/wordUtils';
+import { Letter } from '../types';
+import { evaluateGuess, determineTileColorFromStatus } from '../utils/wordUtils';
 import { useGameStore } from '../store/gameStore';
+import { useKeyPress } from '../hooks/useKeyPress';
 
 interface TileRowProps {
     word: Letter[];
@@ -11,38 +12,33 @@ interface TileRowProps {
 }
 
 const TileRow = ({ word, rowId, active }: TileRowProps) => {
-    const { currentGuess, solution, addLetter, removeLetter, submitGuess } = useGameStore();
-
-    // Track if Enter key was pressed
+    const { currentGuess, solution, submitGuess, addLetter, removeLetter } = useGameStore();
     const [enterPressed, setEnterPressed] = useState(false);
 
-    // Use useCallback to memoize the handleKeyDown function
-    const handleKeyDown = useCallback((e: KeyboardEvent) => {
-        // Only process keyboard events if the row is active
-        if (!active) return;
-        if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-        if (e.key === 'Backspace') {
-            removeLetter();
-        }
-        else if (/^[A-Za-z]$/.test(e.key)) {
-            addLetter(e.key);
-        }
-        else if (e.key === 'Enter') {
-            setEnterPressed(true);
-        }
-    }, [active, addLetter, removeLetter, setEnterPressed]);
-
-    // Handle keyboard events
-    useEffect(() => {
-        if (active) {
-            document.addEventListener("keydown", handleKeyDown);
-
-            return () => {
-                document.removeEventListener("keydown", handleKeyDown);
+    // Use the custom hook for letter keys (A-Z)
+    useKeyPress({
+        key: 'regex:/^[A-Za-z]$/',
+        onKeyPress: (key) => {
+            if (key) {
+                addLetter(key);
             }
-        }
-    }, [active, handleKeyDown]);
+        },
+        isActive: active
+    });
+
+    // Use the custom hook for Backspace key
+    useKeyPress({
+        key: 'Backspace',
+        onKeyPress: removeLetter,
+        isActive: active
+    });
+
+    // Use the custom hook for Enter key
+    useKeyPress({
+        key: 'Enter',
+        onKeyPress: () => setEnterPressed(true),
+        isActive: active
+    });
 
     // Submit guess when Enter is pressed
     useEffect(() => {
