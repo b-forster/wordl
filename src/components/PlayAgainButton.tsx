@@ -16,9 +16,9 @@ const PlayAgainButton = memo(() => {
         <Button
             rounded='full'
             variant='outline'
-            w='80%'
+            w='100%'
             p={5}
-            m={8}
+            m={5}
             onClick={resetGame}
         >
             Play again
