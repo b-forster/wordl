@@ -7,7 +7,8 @@ import KeyBoard from './components/Keyboard/Keyboard'
 import theme from './theme'
 import {
   ChakraProvider,
-  VStack
+  VStack,
+  Box
 } from "@chakra-ui/react"
 import { useGameStore } from './store/gameStore'
 import PlayAgainButton from './components/PlayAgainButton'
@@ -26,7 +27,9 @@ function App() {
       <VStack gap='0'>
         <Header />
         <WordGrid />
-        {isGameOver ? <PlayAgainButton /> : <KeyBoard />}
+        <Box height="200px" display="flex" alignItems="flex-start" justifyContent="center">
+          {isGameOver ? <PlayAgainButton /> : <KeyBoard />}
+        </Box>
         <Footer />
       </VStack>
     </ChakraProvider>

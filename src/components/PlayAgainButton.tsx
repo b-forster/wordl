@@ -26,7 +26,7 @@ const PlayAgainButton = () => {
         <Button
             rounded='full'
             variant='outline'
-            w='60%'
+            w='80%'
             p={5}
             m={8}
             onClick={resetGame}
