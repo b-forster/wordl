@@ -1,8 +1,9 @@
 import { useGameStore } from '../store/gameStore'
 import { Button } from '@chakra-ui/react'
 import { useKeyPress } from '../hooks/useKeyPress'
+import { memo } from 'react'
 
-const PlayAgainButton = () => {
+const PlayAgainButton = memo(() => {
     const { resetGame } = useGameStore()
 
     // Use the custom hook to handle Enter key press
@@ -23,6 +24,6 @@ const PlayAgainButton = () => {
             Play again
         </Button>
     )
-}
+})
 
 export default PlayAgainButton

@@ -1,4 +1,5 @@
 import { Box, Text } from '@chakra-ui/react'
+import { memo } from 'react'
 import { Letter } from '../types';
 
 interface TileProps {
@@ -6,7 +7,7 @@ interface TileProps {
     color?: string;
 }
 
-const Tile = ({ children, color }: TileProps) => {
+const Tile = memo(({ children, color }: TileProps) => {
 
     const letter = children?.charAt(0)?.toUpperCase();
 
@@ -25,6 +26,6 @@ const Tile = ({ children, color }: TileProps) => {
             }
         </Box >
     )
-}
+})
 
 export default Tile

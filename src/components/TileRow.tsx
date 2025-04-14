@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import Tile from './Tile'
 import { Letter } from '../types';
 import { evaluateGuess, determineTileColorFromStatus } from '../utils/wordUtils';
@@ -11,7 +11,18 @@ interface TileRowProps {
     active: boolean;
 }
 
-const TileRow = ({ word, rowId, active }: TileRowProps) => {
+// Custom equality function for TileRow
+const areEqual = (prevProps: TileRowProps, nextProps: TileRowProps) => {
+    // Only re-render if the word, rowId, or active state has changed
+    return (
+        prevProps.active === nextProps.active &&
+        prevProps.rowId === nextProps.rowId &&
+        prevProps.word.length === nextProps.word.length &&
+        prevProps.word.every((letter, index) => letter === nextProps.word[index])
+    );
+};
+
+const TileRow = memo(({ word, rowId, active }: TileRowProps) => {
     const { currentGuess, solution, submitGuess, addLetter, removeLetter } = useGameStore();
     const [enterPressed, setEnterPressed] = useState(false);
 
@@ -79,6 +90,6 @@ const TileRow = ({ word, rowId, active }: TileRowProps) => {
             </Tile>
         })
     )
-}
+})
 
-export default TileRow
+export default memo(TileRow, areEqual)

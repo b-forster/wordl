@@ -1,7 +1,8 @@
 import { Box, Flex, Link, Text } from '@chakra-ui/react'
 import { FaGithub } from 'react-icons/fa'
+import { memo } from 'react'
 
-const Footer = () => {
+const Footer = memo(() => {
     return (
         <Box as="footer" py={4} textAlign="center">
             <Flex justify="center" align="center">
@@ -20,6 +21,6 @@ const Footer = () => {
             </Flex>
         </Box>
     )
-}
+})
 
 export default Footer
