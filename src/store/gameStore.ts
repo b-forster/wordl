@@ -83,7 +83,9 @@ export const useGameStore = create<GameState>((set, get) => ({
                 solution: randomSolution,
             });
 
-            console.log('Selected solution:', randomSolution);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('Selected solution:', randomSolution);
+            }
         } catch (error) {
             console.error('Failed to load word lists:', error);
         }
@@ -224,7 +226,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 
         if (solutionWords.length > 0) {
             newSolution = solutionWords[Math.floor(Math.random() * solutionWords.length)];
-            console.log('New solution:', newSolution);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('New solution:', newSolution);
+            }
         }
 
         // Dismiss any existing toasts
