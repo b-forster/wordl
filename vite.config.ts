@@ -12,5 +12,11 @@ export default defineConfig(({ mode }) => {
       // Make environment variables available in the app
       'process.env': env,
     },
+    test: {
+      globals: true,
+      environment: 'happy-dom',
+      setupFiles: './tests/setup.ts',
+      include: ['**/*.{test,spec}.{ts,tsx}'],
+    },
   }
 })

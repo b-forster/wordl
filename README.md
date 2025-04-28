@@ -47,8 +47,9 @@ This project is built with:
 - TypeScript
 - Vite
 - Chakra UI
-- Zustand for state management
-- Cline VSCode extension for system design feedback and debugging
+- Zustand
+- Vitest
+- Cline VSCode extension (for system design feedback and debugging)
 
 ### Running Locally
 
