@@ -18,6 +18,8 @@ const Tile = memo(({ children, color }: TileProps) => {
             borderWidth={color ? 0 : '2px'}
             borderColor='gray'
             backgroundColor={color}
+            data-testid="tile"
+            data-color={color || ""}
         >
             {letter &&
                 <Text fontSize='3xl' fontWeight='800'>
