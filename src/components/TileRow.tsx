@@ -8,21 +8,21 @@ import { useKeyPress } from '../hooks/useKeyPress';
 interface TileRowProps {
     word: Letter[];
     rowId: number;
-    active: boolean;
+    isActive: boolean;
 }
 
 // Custom equality function for TileRow
 const areEqual = (prevProps: TileRowProps, nextProps: TileRowProps) => {
     // Only re-render if the word, rowId, or active state has changed
     return (
-        prevProps.active === nextProps.active &&
+        prevProps.isActive === nextProps.isActive &&
         prevProps.rowId === nextProps.rowId &&
         prevProps.word.length === nextProps.word.length &&
         prevProps.word.every((letter, index) => letter === nextProps.word[index])
     );
 };
 
-const TileRow = memo(({ word, rowId, active }: TileRowProps) => {
+const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
     const { currentGuess, solution, submitGuess, addLetter, removeLetter } = useGameStore();
     const [enterPressed, setEnterPressed] = useState(false);
 
@@ -34,37 +34,37 @@ const TileRow = memo(({ word, rowId, active }: TileRowProps) => {
                 addLetter(key);
             }
         },
-        isActive: active
+        isActive,
     });
 
     // Use the custom hook for Backspace key
     useKeyPress({
         key: 'Backspace',
         onKeyPress: removeLetter,
-        isActive: active
+        isActive,
     });
 
     // Use the custom hook for Enter key
     useKeyPress({
         key: 'Enter',
         onKeyPress: () => setEnterPressed(true),
-        isActive: active
+        isActive,
     });
 
     // Submit guess when Enter is pressed
     useEffect(() => {
-        if (enterPressed && active) {
+        if (enterPressed && isActive) {
             submitGuess();
             setEnterPressed(false);
         }
-    }, [enterPressed, submitGuess, active]);
+    }, [enterPressed, submitGuess, isActive]);
 
     // Render either current in progress guess if row is active,
     // or previously submitted guess if not active
-    const guessLetters: Letter[] = active ? [...currentGuess] : [...word];
+    const guessLetters: Letter[] = isActive ? [...currentGuess] : [...word];
 
     // For editable row with a guess in progress
-    if (active) {
+    if (isActive) {
         // Populate with empty tiles as needed to fill out row
         while (guessLetters.length < 5) {
             guessLetters.push(null)

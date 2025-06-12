@@ -43,7 +43,7 @@ describe('TileRow', () => {
     const defaultProps = {
         word: ['H', 'E', 'L', 'L', 'O'] as Letter[],
         rowId: 0,
-        active: false
+        isActive: false
     };
 
     // Default game store values
@@ -118,7 +118,7 @@ describe('TileRow', () => {
     it('renders active row with current guess', () => {
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} active={true} />
+                <TileRow {...defaultProps} isActive={true} />
             </ChakraProvider>
         );
 
@@ -149,7 +149,7 @@ describe('TileRow', () => {
 
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} active={true} />
+                <TileRow {...defaultProps} isActive={true} />
             </ChakraProvider>
         );
 
@@ -170,7 +170,7 @@ describe('TileRow', () => {
     it('sets up keyboard listeners when active', () => {
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} active={true} />
+                <TileRow {...defaultProps} isActive={true} />
             </ChakraProvider>
         );
 
@@ -196,7 +196,7 @@ describe('TileRow', () => {
     it('does not set up keyboard listeners when inactive', () => {
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} active={false} />
+                <TileRow {...defaultProps} isActive={false} />
             </ChakraProvider>
         );
 

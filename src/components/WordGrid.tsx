@@ -31,7 +31,7 @@ const WordGrid = () => {
                 gap='1.5'
             >
                 {grid.map((row, rowId) => {
-                    return <TileRow key={rowId} word={row} rowId={rowId} active={isActiveRow(rowId)} />
+                    return <TileRow key={rowId} word={row} rowId={rowId} isActive={isActiveRow(rowId)} />
                 })}
 
             </SimpleGrid >

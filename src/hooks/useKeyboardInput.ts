@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 
 interface UseKeyboardInputProps {
-    active: boolean;
+    isActive: boolean;
 }
 
 interface UseKeyboardInputReturn {
@@ -13,17 +13,17 @@ interface UseKeyboardInputReturn {
 /**
  * Custom hook to handle keyboard input for the Wordle game
  * 
- * @param active Whether the component using this hook is active and should process keyboard events
+ * @param isActive Whether the component using this hook is active and should process keyboard events
  * @returns Object containing enterPressed state and setter
  */
-export const useKeyboardInput = ({ active }: UseKeyboardInputProps): UseKeyboardInputReturn => {
+export const useKeyboardInput = ({ isActive }: UseKeyboardInputProps): UseKeyboardInputReturn => {
     const { addLetter, removeLetter } = useGameStore();
     const [enterPressed, setEnterPressed] = useState(false);
 
     // Handle keyboard events
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         // Only process keyboard events if the component is active
-        if (!active) return;
+        if (!isActive) return;
         if (e.ctrlKey || e.metaKey || e.altKey) return;
 
         if (e.key === 'Backspace') {
@@ -35,18 +35,18 @@ export const useKeyboardInput = ({ active }: UseKeyboardInputProps): UseKeyboard
         else if (e.key === 'Enter') {
             setEnterPressed(true);
         }
-    }, [active, addLetter, removeLetter, setEnterPressed]);
+    }, [isActive, addLetter, removeLetter, setEnterPressed]);
 
     // Add and remove event listeners
     useEffect(() => {
-        if (active) {
+        if (isActive) {
             document.addEventListener("keydown", handleKeyDown);
 
             return () => {
                 document.removeEventListener("keydown", handleKeyDown);
             }
         }
-    }, [active, handleKeyDown]);
+    }, [isActive, handleKeyDown]);
 
     return {
         enterPressed,
