@@ -4,7 +4,15 @@ import { memo } from 'react'
 
 const Footer = memo(() => {
     return (
-        <Box as="footer" py={4} textAlign="center">
+        <Box as="footer"
+            py={4}
+            textAlign="center"
+            css={{
+                "@media (600px < width < 960px)": {
+                    position: "absolute",
+                    bottom: "3em",
+                }
+            }}>
             <Flex justify="center" align="center">
                 <Link
                     href="https://github.com/b-forster/wordl"

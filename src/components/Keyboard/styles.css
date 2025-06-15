@@ -2,7 +2,7 @@
     font-weight: 800;
     background-color: inherit;
     margin-top: 0.5em;
-    width: 170%;
+    max-width: 95vw;
 }
 
 .hg-theme-default .hg-row {
@@ -44,4 +44,36 @@
 
 .key-gray {
     background-color: #333 !important;
+}
+
+@media (max-width: 960px) {
+    .hg-theme-default .hg-button {
+        font-size: 1.2em;
+        padding: 2px;
+        height: 3.5em;
+        font-weight: 800;
+    }
+
+    .hg-theme-default .hg-button.hg-standardBtn {
+        width: 2.5em;
+    }
+}
+
+@media (max-width:600px) {
+    .hg-button-bksp span {
+        font-size: 1.8em;
+    }
+
+    .hg-theme-default .hg-button {
+        margin: 1px;
+    }
+
+    .hg-theme-default .hg-row .hg-button {
+        margin-right: 0.3em;
+        height: 4em;
+    }
+
+    .hg-theme-default .hg-row .hg-button:not(:last-child) {
+        margin-right: 0.3em;
+    }
 }

@@ -29,6 +29,12 @@ const WordGrid = () => {
             <SimpleGrid
                 columns={5}
                 gap='1.5'
+                css={{
+                    "@media (600px < width < 960px)": {
+                        margin: "5vh 0 8vh",
+
+                    }
+                }}
             >
                 {grid.map((row, rowId) => {
                     return <TileRow key={rowId} word={row} rowId={rowId} isActive={isActiveRow(rowId)} />

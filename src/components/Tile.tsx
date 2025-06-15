@@ -20,6 +20,12 @@ const Tile = memo(({ children, color }: TileProps) => {
             backgroundColor={color}
             data-testid="tile"
             data-color={color || ""}
+            css={{
+                "@media (600px < width < 960px)": {
+                    width: "3.8rem",
+                    height: "3.8rem",
+                }
+            }}
         >
             {letter &&
                 <Text fontSize='3xl' fontWeight='800'>
