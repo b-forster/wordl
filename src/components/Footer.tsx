@@ -15,7 +15,7 @@ const Footer = memo(() => {
                     color="gray.500"
                     _hover={{ color: "gray.700" }}
                 >
-                    <FaGithub size={24} style={{ marginRight: '8px' }} />
+                    <FaGithub size={24} />
                     <Text fontSize='sm'>View on GitHub</Text>
                 </Link>
             </Flex>
