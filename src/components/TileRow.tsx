@@ -1,6 +1,6 @@
 import { useEffect, useState, memo } from 'react';
 import Tile from './Tile'
-import { Letter, LetterStatus } from '../types';
+import { Letter } from '../types';
 import { evaluateGuess, determineTileColorFromStatus } from '../utils/wordUtils';
 import { useGameStore } from '../store/gameStore';
 import { useKeyPress } from '../hooks/useKeyPress';
