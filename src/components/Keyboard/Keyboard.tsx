@@ -52,8 +52,8 @@ const KeyBoard = () => {
             },
         ];
 
-
-        return buttonTheme;
+        // Filter out themes with empty button strings to avoid React warnings
+        return buttonTheme.filter(theme => theme.buttons.trim() !== '');
     }
 
     return (
