@@ -1,6 +1,6 @@
 .hg-theme-default {
     font-weight: 800;
-    background-color: black;
+    background-color: inherit;
     margin-top: 0.5em;
     width: 170%;
 }
