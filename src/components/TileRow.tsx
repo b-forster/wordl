@@ -1,6 +1,6 @@
 import { useEffect, useState, memo } from 'react';
 import Tile from './Tile'
-import { Letter } from '../types';
+import { Letter, LetterStatus } from '../types';
 import { evaluateGuess, determineTileColorFromStatus } from '../utils/wordUtils';
 import { useGameStore } from '../store/gameStore';
 import { useKeyPress } from '../hooks/useKeyPress';
@@ -63,28 +63,22 @@ const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
     // or previously submitted guess if not active
     const guessLetters: Letter[] = isActive ? [...currentGuess] : [...word];
 
-    // For editable row with a guess in progress
+    // For editable row with an unrevealed guess in progress,
+    // populate with empty tiles as needed to fill out row
     if (isActive) {
-        // Populate with empty tiles as needed to fill out row
         while (guessLetters.length < 5) {
             guessLetters.push(null)
         }
-
-        return (
-            guessLetters.map((letter, colId) => {
-                return <Tile key={`${rowId}${colId}`}>{letter}</Tile>
-            })
-        )
     }
 
-    // For non-editable rows without a guess in progress
-    const letterStatuses = evaluateGuess(word, solution);
+    // No need to determine letter statuses for row with a guess in progress
+    const letterStatuses = isActive ? [] : evaluateGuess(word, solution);
 
     return (
-        word.map((letter, colId) => {
+        guessLetters.map((letter, colId) => {
             return <Tile
                 key={`${rowId}${colId}`}
-                color={determineTileColorFromStatus(letterStatuses[colId])}
+                color={isActive ? undefined : determineTileColorFromStatus(letterStatuses[colId])}
             >
                 {letter}
             </Tile>
