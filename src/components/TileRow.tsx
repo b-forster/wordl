@@ -25,6 +25,8 @@ const areEqual = (prevProps: TileRowProps, nextProps: TileRowProps) => {
 const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
     const { currentGuess, solution, submitGuess, addLetter, removeLetter } = useGameStore();
     const [enterPressed, setEnterPressed] = useState(false);
+    const [isRevealing, setIsRevealing] = useState(false);
+    const [wasActive, setWasActive] = useState(isActive);
 
     // Use the custom hook for letter keys (A-Z)
     useKeyPress({
@@ -59,6 +61,15 @@ const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
         }
     }, [enterPressed, submitGuess, isActive]);
 
+    // Detect when a row transitions from active to inactive (guess submitted)
+    useEffect(() => {
+        if (wasActive && !isActive && word.length === 5) {
+            // Row has just been submitted - start the reveal animation
+            setIsRevealing(true);
+        }
+        setWasActive(isActive);
+    }, [isActive, wasActive, word]);
+
     // Render either current in progress guess if row is active,
     // or previously submitted guess if not active
     const guessLetters: Letter[] = isActive ? [...currentGuess] : [...word];
@@ -79,6 +90,7 @@ const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
             return <Tile
                 key={`${rowId}${colId}`}
                 color={isActive ? undefined : determineTileColorFromStatus(letterStatuses[colId])}
+                isRevealing={isRevealing}
             >
                 {letter}
             </Tile>
