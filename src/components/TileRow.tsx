@@ -70,6 +70,14 @@ const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
         setWasActive(isActive);
     }, [isActive, wasActive, word]);
 
+    // Reset isRevealing when the word changes (e.g., when the game is reset)
+    useEffect(() => {
+        // If the word is cleared or a new game starts, reset isRevealing
+        if (word.length === 0 || word.every(letter => letter === null)) {
+            setIsRevealing(false);
+        }
+    }, [word]);
+
     // Render either current in progress guess if row is active,
     // or previously submitted guess if not active
     const guessLetters: Letter[] = isActive ? [...currentGuess] : [...word];
