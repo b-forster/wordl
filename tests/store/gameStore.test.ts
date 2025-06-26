@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi, beforeAll, afterEach } from 'vitest';
 import { useGameStore } from '../../src/store/gameStore';
+import { duration } from 'happy-dom/lib/PropertySymbol.js';
 
 // Mock the toaster module
 vi.mock('../../src/components/ui/toaster', () => {
@@ -198,6 +199,7 @@ describe('Game Store', () => {
             // Check that the win message was shown
             expect(toaster.create).toHaveBeenCalledWith({
                 description: 'Genius',
+                duration: 3000,
             });
         });
 

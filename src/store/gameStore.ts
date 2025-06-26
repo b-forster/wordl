@@ -21,6 +21,7 @@ interface GameState {
     addLetter: (letter: string) => void
     removeLetter: () => void
     clearGuess: () => void
+    endGameWithToast: (grid: Letter[][], message: string, shouldPersist?: boolean) => void
 }
 
 // Initial empty grid
@@ -32,6 +33,8 @@ const createEmptyGrid = (): Letter[][] => [
     [null, null, null, null, null],
     [null, null, null, null, null],
 ]
+
+
 
 export const useGameStore = create<GameState>((set, get) => ({
     // Initial state
@@ -119,9 +122,24 @@ export const useGameStore = create<GameState>((set, get) => ({
         set({ currentGuess: [] })
     },
 
+    // Helper function to end the game and show a toast message
+    endGameWithToast: (grid: Letter[][], message: string, shouldPersist = false) => {
+        const toastDuration = shouldPersist ? Infinity : 3000
+        set({
+            grid,
+            activeRow: Infinity,
+            isGameOver: true,
+            currentGuess: []
+        })
+        toaster.create({
+            description: message,
+            duration: toastDuration,
+        })
+    },
+
     // Submit guess with validation
     submitGuess: (guess?: Letter[]) => {
-        const { grid, activeRow, solution, validGuesses, currentGuess, correctLetters, diffPosLetters, wrongLetters } = get()
+        const { grid, activeRow, solution, validGuesses, currentGuess, correctLetters, diffPosLetters, wrongLetters, endGameWithToast } = get()
 
         // Use provided guess or current guess from state
         const guessToSubmit = guess || currentGuess
@@ -177,43 +195,27 @@ export const useGameStore = create<GameState>((set, get) => ({
         const newGrid = [...grid]
         newGrid[activeRow] = [...guessToSubmit]
 
+
+
         // Check win condition against the current solution
         if (guessWord === solution) {
             // Generate message on victory based on number of guesses
             const winMessages: string[] = ["Genius", "Magnificent", "Impressive", "Splendid", "Great", "Phew"]
-            toaster.create({
-                description: winMessages[activeRow] || 'Great!',
-            })
-
-            set({
-                grid: newGrid,
-                activeRow: Infinity,
-                isGameOver: true,
-                currentGuess: []
-            })
+            endGameWithToast(newGrid, winMessages[activeRow] || 'Great!')
             return
         }
 
-        // Move to the next row
-        set({
-            grid: newGrid,
-            activeRow: activeRow + 1,
-            currentGuess: []
-        })
-
-
-        // End the game if there are no more rows
+        // Move to the next row if there are more rows available
         if (activeRow >= grid.length - 1) {
+            // End the game if there are no more rows
+            endGameWithToast(newGrid, solution, true)
+        } else {
+            // Continue to the next row
             set({
                 grid: newGrid,
-                isGameOver: true,
+                activeRow: activeRow + 1,
                 currentGuess: []
             })
-            toaster.create({
-                description: solution,
-                duration: Infinity,
-            })
-            return
         }
     },
 
