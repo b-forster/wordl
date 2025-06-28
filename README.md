@@ -20,16 +20,17 @@ A React implementation of the popular word-guessing game Wordle, built with Type
 
 ## Recent Updates
 
-- Changed color of on-screen keyboard keys to match tile colors after guess
-- Added support for pressing Enter to start a new game when the "Play Again" button is visible
 - Fixed toast persistence issue so solution toasts are properly dismissed when starting a new game
 - Improved keyboard handling for a more seamless user experience
+- Improved responsiveness for mobile devices
+- Improved dark mode support
+- Added tile row reveal animation after a guess is submitted
 
 ## Planned Features & Fixes
 
-- Improve responsiveness for mobile devices
-- Add tile row reveal animation after a guess is submitted
 - Add tile row shaking animation when an error toast is shown
+- Add staggered delay to tile reveal animation so that tiles reveal one at a time
+- Track and display user stats
 
 ## How to Play
 
