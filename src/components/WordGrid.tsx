@@ -2,10 +2,11 @@ import { Box, SimpleGrid } from '@chakra-ui/react'
 import TileRow from './TileRow'
 import { useGameStore } from '../store/gameStore'
 import { Toaster } from '@/components/ui/toaster'
+import { evaluateGuess } from '../utils/wordUtils'
 
 
 const WordGrid = () => {
-    const { grid, activeRow } = useGameStore()
+    const { grid, activeRow, currentGuess, solution } = useGameStore()
 
     const isActiveRow = (rowIndex: number) => {
         return rowIndex === activeRow
@@ -36,8 +37,18 @@ const WordGrid = () => {
                     }
                 }}
             >
-                {grid.map((row, rowId) => {
-                    return <TileRow key={rowId} word={row} rowId={rowId} isActive={isActiveRow(rowId)} />
+                {grid.map((word, rowId) => {
+                    const isActive = isActiveRow(rowId);
+                    return (
+                        <TileRow
+                            key={`row${rowId}`}
+                            word={word}
+                            rowId={rowId}
+                            isActive={isActive}
+                            currentGuess={isActive ? currentGuess : []}
+                            letterStatuses={isActive ? [] : evaluateGuess(word, solution)}
+                        />
+                    );
                 })}
 
             </SimpleGrid >

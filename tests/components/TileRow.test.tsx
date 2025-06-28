@@ -86,12 +86,21 @@ describe('TileRow', () => {
     it('renders inactive row with correct colors', () => {
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} />
+                <TileRow
+                    currentGuess={['H', 'E', 'L', 'L', 'O']}
+                    {...defaultProps}
+                    letterStatuses={[
+                        LetterStatus.CORRECT,
+                        LetterStatus.DIFF_POS,
+                        LetterStatus.ABSENT,
+                        LetterStatus.CORRECT,
+                        LetterStatus.DIFF_POS
+                    ]}
+                />
             </ChakraProvider>
         );
 
-        // Check that evaluateGuess was called with the correct arguments
-        expect(evaluateGuess).toHaveBeenCalledWith(defaultProps.word, mockGameStore.solution);
+        // We're now passing letterStatuses directly, so evaluateGuess is not called
 
         // Check that the correct number of tiles are rendered
         const tiles = screen.getAllByTestId('mock-tile');
@@ -118,7 +127,12 @@ describe('TileRow', () => {
     it('renders active row with current guess', () => {
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} isActive={true} />
+                <TileRow
+                    {...defaultProps}
+                    currentGuess={['W', 'O', 'R', 'L', 'D']}
+                    isActive={true}
+                    letterStatuses={[]}
+                />
             </ChakraProvider>
         );
 
@@ -142,14 +156,16 @@ describe('TileRow', () => {
 
     it('renders active row with partial guess and empty tiles', () => {
         // Set a partial current guess
-        vi.mocked(useGameStore).mockReturnValue({
-            ...mockGameStore,
-            currentGuess: ['W', 'O'] as Letter[]
-        });
+        const currentGuess = ['W', 'O'] as Letter[];
 
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} isActive={true} />
+                <TileRow
+                    {...defaultProps}
+                    currentGuess={currentGuess}
+                    isActive={true}
+                    letterStatuses={[]}
+                />
             </ChakraProvider>
         );
 
@@ -170,7 +186,12 @@ describe('TileRow', () => {
     it('sets up keyboard listeners when active', () => {
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} isActive={true} />
+                <TileRow
+                    {...defaultProps}
+                    currentGuess={[]}
+                    isActive={true}
+                    letterStatuses={[]}
+                />
             </ChakraProvider>
         );
 
@@ -196,7 +217,18 @@ describe('TileRow', () => {
     it('does not set up keyboard listeners when inactive', () => {
         render(
             <ChakraProvider value={theme}>
-                <TileRow {...defaultProps} isActive={false} />
+                <TileRow
+                    {...defaultProps}
+                    currentGuess={[]}
+                    isActive={false}
+                    letterStatuses={[
+                        LetterStatus.CORRECT,
+                        LetterStatus.DIFF_POS,
+                        LetterStatus.ABSENT,
+                        LetterStatus.CORRECT,
+                        LetterStatus.DIFF_POS
+                    ]}
+                />
             </ChakraProvider>
         );
 

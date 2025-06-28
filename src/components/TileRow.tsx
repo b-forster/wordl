@@ -1,7 +1,7 @@
 import { useEffect, useState, memo } from 'react';
 import Tile from './Tile'
-import { Letter } from '../types';
-import { evaluateGuess, determineTileColorFromStatus } from '../utils/wordUtils';
+import { Letter, LetterStatus } from '../types';
+import { determineTileColorFromStatus } from '../utils/wordUtils';
 import { useGameStore } from '../store/gameStore';
 import { useKeyPress } from '../hooks/useKeyPress';
 
@@ -9,21 +9,33 @@ interface TileRowProps {
     word: Letter[];
     rowId: number;
     isActive: boolean;
+    currentGuess: Letter[];
+    letterStatuses: LetterStatus[];
 }
 
 // Custom equality function for TileRow
 const areEqual = (prevProps: TileRowProps, nextProps: TileRowProps) => {
-    // Only re-render if the word, rowId, or active state has changed
+    // Only re-render if the word, rowId, active state, or currentGuess has changed
+    const currentGuessEqual = prevProps.isActive
+        ? prevProps.currentGuess.length === nextProps.currentGuess.length &&
+        prevProps.currentGuess.every((letter, index) => letter === nextProps.currentGuess[index])
+        : true; // If not active, we don't care about currentGuess
+
     return (
         prevProps.isActive === nextProps.isActive &&
         prevProps.rowId === nextProps.rowId &&
         prevProps.word.length === nextProps.word.length &&
-        prevProps.word.every((letter, index) => letter === nextProps.word[index])
+        prevProps.word.every((letter, index) => letter === nextProps.word[index]) &&
+        currentGuessEqual
     );
 };
 
-const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
-    const { currentGuess, solution, submitGuess, addLetter, removeLetter } = useGameStore();
+const TileRow = memo(({ word, rowId, isActive, currentGuess, letterStatuses }: TileRowProps) => {
+    // Only subscribe to the specific parts of the store that this row needs
+    const submitGuess = useGameStore(state => state.submitGuess);
+    const addLetter = useGameStore(state => state.addLetter);
+    const removeLetter = useGameStore(state => state.removeLetter);
+
     const [enterPressed, setEnterPressed] = useState(false);
     const [isRevealing, setIsRevealing] = useState(false);
     const [wasActive, setWasActive] = useState(isActive);
@@ -90,13 +102,11 @@ const TileRow = memo(({ word, rowId, isActive }: TileRowProps) => {
         }
     }
 
-    // No need to determine letter statuses for row with a guess in progress
-    const letterStatuses = isActive ? [] : evaluateGuess(word, solution);
 
     return (
         guessLetters.map((letter, colId) => {
             return <Tile
-                key={`${rowId}${colId}`}
+                key={`row${rowId}-col${colId}-${letter}`}
                 color={isActive ? undefined : determineTileColorFromStatus(letterStatuses[colId])}
                 isRevealing={isRevealing}
             >

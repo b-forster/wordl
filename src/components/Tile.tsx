@@ -32,6 +32,15 @@ const fadeInAnimation = keyframes`
   }
 `;
 
+// Custom equality function for Tile
+const areTilePropsEqual = (prevProps: TileProps, nextProps: TileProps) => {
+  return (
+    prevProps.children === nextProps.children &&
+    prevProps.color === nextProps.color &&
+    prevProps.isRevealing === nextProps.isRevealing
+  );
+};
+
 const Tile = memo(({ children, color, isRevealing = false }: TileProps) => {
   const letter = children?.charAt(0)?.toUpperCase();
 
@@ -67,4 +76,4 @@ const Tile = memo(({ children, color, isRevealing = false }: TileProps) => {
   )
 })
 
-export default Tile
+export default memo(Tile, areTilePropsEqual)

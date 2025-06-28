@@ -42,6 +42,8 @@ describe('WordGrid', () => {
         vi.mocked(useGameStore).mockReturnValue({
             grid: mockGrid,
             activeRow: 2,
+            solution: 'HELLO',
+            currentGuess: [] as Letter[],
         });
     });
 
